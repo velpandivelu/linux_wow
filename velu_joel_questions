@@ -1,0 +1,147 @@
+General Questions
+=======================================================
+Explain About Yourself ?
+Why this company ?
+Why are you planning now for a change ? ( Don’t say anything bad about the current company .. you can say like technical or financial growth )
+
+
+Linux Interview Questions 
+=======================================================
+$$ RHEL Boot process ?
+
+$$RHEL runlevels explain and what is the default runlevel in linux ?
+#systemctl set-default multi-user.target
+#systemctl get-default
+
+$$Explain a P2/P1 issue you have encountered and how you solved it ?
+
+$$How to create a filesystem ? just steps
+
+XFS file systems cannot be reduced in size.
+
+
+$$How to check firewall running / not ? If running how we can add a rule for accepting some traffic 
+
+%%What is selinux and how we can check it is on 
+
+After patching, how can we roll back the patches ?
+
+After patching the grub is not showing / corrupting how to recover ?
+
+How to reset the root password if forgotten ?
+
+How to add a new network interface or ip to a server.
+
+How are you patching ? 
+
+If /root is read only, how to recover ?
+
+Exporting nfs share and  mounting it in the client ?
+
+YUM vs RPM
+
+Linux vs Unix -- https://www.javatpoint.com/unix-vs-linux
+
+%%How to rebuild initramfs
+
+Make backup
+    # cp /boot/initramfs-<kernelVersion>.img /boot/initramfs-<kernelVersion>.img.bak
+Build Initramfs
+    # dracut -f /boot/initramfs-<kernelVersion>.img  <kernelVersion>
+grep initrd /boot/loader/entries/*
+grep initrd /etc/grub2.cfg
+
+How did you build a physical machine 
+What you are the pre requesting check while building servers 
+
+$$$What are the permission in fstab 00 0 2 
+  https://linoxide.com/understanding-each-entry-of-linux-fstab-etcfstab-file/
+  <filesystem,UUID> <mountpoint>  <type> <option> <backup_or_not> <filesystem checker The root device should be 1. Other partitions should be 2, or 0 to disable checking.>
+
+Options
+Options are dependent on the file system.
+
+You may use "defaults" here and some typical options may include : 
+
+Ubuntu 8.04 and later uses relatime as default for linux native file systems. You can find a discussion of relatime here : http://lwn.net/Articles/244829. This relates to when and how often the last access time of the current version of a file is updated, i.e. when it was last read.
+defaults = rw, suid, dev, exec, auto, nouser, and async.
+ntfs/vfat = permissions are set at the time of mounting the partition with umask, dmask, and fmask and can not be changed with commands such as chown or chmod.
+I advise dmask=027,fmask=137 (using umask=000 will cause all your files to be executable). More permissive options would be dmask=000,fmask=111.
+For mounting samba shares you can specify a username and password, or better a credentials file. The credentials file contains should be owned by root.root with permissions = 0400 .
+
+Common options :
+sync/async - All I/O to the file system should be done (a)synchronously.
+auto - The filesystem can be mounted automatically (at bootup, or when mount is passed the -a option). This is really unnecessary as this is the default action of mount -a anyway.
+noauto - The filesystem will NOT be automatically mounted at startup, or when mount passed -a. You must explicitly mount the filesystem.
+dev/nodev - Interpret/Do not interpret character or block special devices on the file system.
+exec / noexec - Permit/Prevent the execution of binaries from the filesystem.
+suid/nosuid - Permit/Block the operation of suid, and sgid bits.
+ro - Mount read-only.
+rw - Mount read-write.
+user - Permit any user to mount the filesystem. This automatically implies noexec, nosuid,nodev unless overridden.
+nouser - Only permit root to mount the filesystem. This is also a default setting.
+defaults - Use default settings. Equivalent to rw, suid, dev, exec, auto, nouser, async.
+_netdev - this is a network device, mount it after bringing up the network. Only valid with fstype nfs.
+For specific options with specific file systems see:
+
+Dump
+This field sets whether the backup utility dump will backup file system. If set to "0" file system ignored, "1" file system is backed up.
+Dump is seldom used and if in doubt use 0.
+
+Pass (fsck order)
+Fsck order is to tell fsck what order to check the file systems, if set to "0" file system is ignored.
+
+Often a source of confusion, there are only 3 options :
+0 == do not check.
+1 == check this partition first.
+2 == check this partition(s) next
+
+
+Yum update vs yum upgrade
+
+update: Updates packages to their recent version.
+upgrade: Upgrades installed packages by replacing or removing the old ones.
+
+
+
+Xfs vs ext4 
+
+1. XFS is optimized for large file transfers and parallel I/O operations, while ext4 is optimized for general-purpose use with a focus on security.
+2. XFS supports larger file sizes and volumes, while ext4 supports advanced file and directory-level permissions.
+3. XFS uses a more advanced journaling system and is better suited for environments that deal with a large number of small files.
+4. XFS filesystem is better for multiple read/write threads, while ext4 is better for single read/write thread.
+5. XFS is not as widely supported as ext4, and may not be compatible with all operating systems.
+
+How to flip the package
+
+Ntp configuration
+
+Crontab
+
+Init file configuration
+
+How to priority the certain process
+
+Any idea in server build
+
+User id limits -/etc/login.defs file.
+
+umask
+#umask -S
+ set in /etc/bashrc ~/bashrc
+
+
+1. Lvm fs increment by adding disk
+2. What is 0 0 in fstab means
+3. Booting process
+4. Kernal panic 
+5. How to recreate init ram fs
+6. How yo recover grub
+7. Cluster .. may be some basic cluster questions 
+8. How to check which all port open ( netstat -tnlp
+9. Command to check port open ncat nz commands
+10. Patching How to downgrade or undo patches
+11. How to boot from rescue vm
+12. How to run fsck on root and other files stems
+13. How to move lv from one disk to another.
+14. Start up services path.
