@@ -145,3 +145,10 @@ umask
 12. How to run fsck on root and other files stems
 13. How to move lv from one disk to another.
 14. Start up services path.
+
+
+RAID concepts:
+how all raid can withstand with max number of disk counts?
+RAID 5 can tolerate the failure of 1 disk
+RAID 6 - 2 disks
+
