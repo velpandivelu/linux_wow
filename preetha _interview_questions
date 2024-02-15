@@ -1,0 +1,150 @@
+mainly doing patching process and prechecks.
+then checking on incidents and requests.
+creating changes like scream test,file system extension/creation,CPU,memory resize and patching change.
+changes are created like normal , standard, emergency , incident fix change.
+raising vendor case like redhat and hpcase,veritas to find root cause of the server issue.
+collecting  logs for server issue like sosreport
+working on file system creation and extension
+working on ASM disk addition and removal
+working on user creation and deletion.
+giving sudo access for the user.(id all=nopasswd all)
+working on rpm and yum installation like java(JDK), uim,networker client,Oswatcher, splunk, crowdstrike.
+The Java Development Kit (JDK) is a software development environment used for developing Java applications and applets
+will provide CPU and memory utilisation stat. sar -r -f /var/log/sa/sa26 -s time -e time
+working on cluster process like restart the packages, enable, disable, freeze and unfreeze.
+doing networker restart, uc4agent restart, uim agent restart,
+working on decommission process
+changing permission for files and directory.
+
+soft link is an actual link to the original file, whereas a hard link is a mirror copy of the original file.
+If you delete the original file, the soft link has no value, because it points to a non-existent file. But in the case of hard link, it is entirely opposite
+
+Incidents alerts
+
+system reboot - check any activity going or not, not means need to check the /var/log/messages
+file system space alert like /var, /home,/tmp - check the usage df  /fs then check which file using more - du -smx * |sort -nr |head.
+swap alert - check top command which process using more memory then assign to the application team.
+process stopped alert like nsr,nimbus,uc4 - check process status - service networker status (/etc/init.d)
+
+Requests
+
+user creation- useradd , set password
+installation -  check packages available or not yum list pkg name, then yum install pkg, check rpm -qa |grep -i pkg
+
+Yum can only install the packages available in its repository,
+RPM can install multiple packages with the right file name and .rpm extension
+yum -- -It resolves and installs dependencies automatically.
+Automatic upgrades are done to the latest version.
+
+rpm - Does not resolve dependencies.
+Does not allow upgradation.
+
+password reset
+sudo access - /etc/sudoers then create at job - at time, to remove at job - atrm jobid
+
+changes
+
+scream test - to perform the scream test process is before decommission,the server is not in use, we don't know whose using the server. we have power off the server in 14 days, any application team came means we need to power on the server.
+
+file system extension - we don't have space in vg means, need to add the disk,check lsscsi, fdisk -l - display hard disk, pvcreate, vgextend, lvextend -L +100M fs, resie2fs or xfs_growfs.
+
+File system creation - add disk,pvcreate, Vgextend,lvcreate -L 20G -n , mkfs.ext4 -m 0, mkdir, mount and add /etc/fstab entry.
+
+CPU,memory resize - stop the server, goto the console -> edit setting and give the size.
+
+Booting process:
+
+BIOS - Basic input and output - to check input and output connection
+
+MBR - Master boot record - located in the 1st sector of the computer hard drive-
+how to load the operating system, how the hard drve is partition.
+contains information about GRUB
+
+GRUB -Grand Unified Bootloader - you have multiple kernel images installed on your system, you can choose which one to be executed, it will allow the default kernel
+
+etc/default/grub
+grub2-set-default 1
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+Kernel - kernel is a core part of the os. it act as mediator between hardware and software, kernel once loaded into the RAM
+
+Kernel is art of OS
+
+Init - /etc/inittab file to decide the Linux run level. after os started
+
+default run level -- 3
+
+0 – halt
+1 – Single user mode
+2 – Multiuser, without NFS
+3 – Full multiuser mode
+4 – unused
+5 – X11 - graphic mode
+6 – reboot
+
+Run level - When the Linux system is booting up, you might see various services getting started. For example, it might say “starting sendmail …. OK”. Those are the runlevel programs, executed from the run level directory as defined by your run level.
+
+set run level -- /etc/init/rc-sysinit. conf
+who -r  - check the runlevel
+
+
+Patching process:
+
+First we are taking the pre check output like - uptime, filesystem, kernel version, os version
+then we are checking the updates like the command is yum updates
+then checking on space available in /var and /boot. if not available means we are clear the space.
+then we are giving yum update command to update the packages
+once update done proceeding for reboot  shutdown -rf now or init 6.
+after server up we are checking the uptime, file system and kernel.
+
+
+inconsole - we are checking server status, restart the server,power off the server, taking cpu and memory utilisation graph, taking snapshot, we can take storage details, add disk, increase cpu and memory count
+
+
+console - linux vm - rdp
+linux physical - we are login to ILO
+hpunix - vm - we are taking hpvminfo -v then login to the console host- go to CO -
+physical - nslookup servername c -
+
+default file permission - 644
+directory - 755
+umask root -022
+
+fstab
+device
+mount point
+file type
+option - default
+backup operation
+file system check order
+0 - take backup
+1 -- not take backup
+0 - file system not checking
+1 - root FS checking
+2 - other Fs
+
+
+
+How to add static ip - /etc/sysconfig/network  - restart the network
+root password reset--> single user mode -->rd.break -->mount –o rw,remount --> passwd root --> then reboot the server
+Kernel Panic - restart and boot with old kernel
+LV reduced- unmount the FS, lvreduce -L -5G path and resize2fs  
+Firewall -- to prevent unwanted access -- running or not -- systemctl status firewalld
+FTP - file transfer protocol - will use to upload the logs in the FTP
+
+
+
+
+incident SLA
+
+p1 - 15mins  - 3 hour
+p2 - 30 mins - 8 hours
+p3 - 4 hrs - 3 days
+p4 - 24 hrs - 7 days
+
+request - within 2 days need to assign
+changes  -
+standard - used for online activity like fs creation and extension and ASM disk addition
+normal - minor -  2 days - scream test, cpu and memory resize.
+significant - 5 business days - patching changes
+emergency change - based on p2 incident,
