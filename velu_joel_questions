@@ -12,6 +12,7 @@ $$ RHEL Boot process ?
 $$RHEL runlevels explain and what is the default runlevel in linux ?
 #systemctl set-default multi-user.target
 #systemctl get-default
+#who -r --to check runlevel
 
 $$Explain a P2/P1 issue you have encountered and how you solved it ?
 
