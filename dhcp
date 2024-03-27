@@ -1,0 +1,75 @@
+2.2 Configuring a DHCP Server
+To configure an Oracle Linux system as a DHCP server:
+
+Install the dhcp package:
+
+#  yum install dhcp
+Edit the /etc/dhcp/dhcpd.conf file to store the settings that the DHCP server can provide to the clients.
+
+The following example configures the domain name, a range of client addresses on the 192.168.2.0/24 subnet from 192.168.2.101 through 192.168.2.254 together with the IP addresses of the default gateway and the DNS server, the default and maximum lease times in seconds, and a static IP address for the application server svr01 that is identified by its MAC address:
+
+option domain-name "mydom.org";
+option domain-name-servers 192.168.2.1, 10.0.1.4;
+option broadcast-address 192.168.2.255;
+option routers 192.168.2.1;
+
+subnet 192.168.2.0 netmask 255.255.255.0 {
+  range 192.168.2.101 192.168.2.254;
+  default-lease-time 10800;
+  max-lease-time 43200;
+}
+
+host svr01 {
+  hardware ethernet 80:56:3e:00:10:00;
+  fixed-address 192.168.2.100;
+  max-lease-time 86400;
+}
+The DHCP server sends the information in the option lines to each client when it requests a lease on an IP address. An option applies only to a subnet if you define it inside a subnet definition. In the example, the options are global and apply to both the subnet and host definitions. The subnet and host definitions have different settings for the maximum lease time.
+
+For more information and examples, see /usr/share/doc/dhcp-version/dhcpd.conf.sample and the dhcp-options(5) manual page.
+
+Edit /etc/sysconfig/dhcpd to configure settings for the DHCP server itself. For example, the following setting specifies the interfaces on which the server listens for DHCP requests:
+
+DHCPDARGS="eth0 eth1"
+For more information, see the dhcpd(8) manual page.
+
+Touch the /var/lib/dhcpd/dhcpd.leases file, which stores information about client leases:
+
+# touch /var/lib/dhcpd/dhcpd.leases
+Enter the following commands to start the DHCP service and ensure that it starts after a reboot:
+
+# service dhcpd start
+# chkconfig dhcpd on
+
+
+
+  ##################################
+
+Configuring a DHCP Client
+To configure an Oracle Linux system as a DHCP client:
+
+Install the dhclient package:
+
+# yum install dhclient
+Edit /container/name/rootfs/etc/sysconfig/network-scripts/ifcfg-iface, where iface is the name of the network interface, and change the value of BOOTPROTO to read as:
+
+BOOTPROTO=dhcp
+Edit /etc/sysconfig/network and verify that it contains the following setting:
+
+NETWORKING=yes
+To specify options for the client, such as the requested lease time and the network interface on which to request an address from the server, create the file /etc/dhclient.conf containing the required options.
+
+The following example specifies that the client should use the eth1 interface, request a lease time of 24 hours, and identify itself using its MAC address:
+
+interface "eth1" {
+  send dhcp-lease-time 86400;
+  send dhcp-client-identifier 80:56:3e:00:10:00;
+}
+For more information, see the dhclient.conf(5) manual page.
+
+Restart the network interface or the network service to enable the client, for example:
+
+# service network restart
+When the client has requested and obtained a lease, information about this lease is stored in /var/lib/dhclient/dhclient-interface.leases.
+
+For more information, see the dhclient(8) manual page.
