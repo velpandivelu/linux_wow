@@ -156,7 +156,7 @@ RAID 6 - 2 disks
 
 Tech M
 
-1.fdisk disk extended 
+1.fdisk disk extension 
 2.grub file corrupt
 3.inside proc 
 4.memory checking 
