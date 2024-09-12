@@ -153,3 +153,13 @@ how all raid can withstand with max number of disk counts?
 RAID 5 can tolerate the failure of 1 disk
 RAID 6 - 2 disks
 
+
+Tech M
+
+1.fdisk disk extended 
+2.grub file corrupt
+3.inside proc 
+4.memory checking 
+5.how to find which package catching issue for db after patching 
+6.kernel panic
+7.chage
